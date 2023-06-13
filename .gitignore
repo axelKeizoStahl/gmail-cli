@@ -1,3 +1,2 @@
-credentials.json
-token.json
-token.pickle
+./src/gmail-term/credentials.json
+./src/gmail-term/token.json
