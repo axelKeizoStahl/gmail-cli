@@ -1,2 +1,2 @@
-./src/gmail-term/credentials.json
-./src/gmail-term/token.json
+src/gmail-term/credentials.json
+src/gmail-term/token.json
