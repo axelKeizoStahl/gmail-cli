@@ -39,3 +39,10 @@ def getclasscomments(creds, classname):
     for comment in comments.get('announcements', [])
     if comment.get('text', '').strip()
 ]
+
+def getclassmates(creds, classname):
+    class_id = classnametoid(creds, classname)
+    service = build('classroom', 'v1', credentials=creds)
+    course = service.courses().student().list(courseId=course_id).execute()
+    students = course.get('students', [])
+    return students
