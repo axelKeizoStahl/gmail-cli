@@ -28,13 +28,12 @@ def create_draft(creds, sender, reciever, subject, content):
             }
         draft = service.users().drafts().create(userId='me', body=create_message).execute()
         
-        print(f"draft_id: {draft['id']}\ndraft_message: {draft['message']}")
+        return (f"draft_id: {draft['id']}\ndraft_message: {draft['message']}")
     
     except HttpError as error:
-        print(f'ERROR: {error}')
+        return str(error)
         draft=None
 
-    return draft
 
 def create_multimediaMIME(creds, filename, sender, reciever, subject, content):
     try:
@@ -94,21 +93,24 @@ def build_file_part(file):
 
 
 def send_message(creds, sender, reciever, subject, content):
-    service = build('gmail', 'v1', credentials=creds)
-    message = EmailMessage()
-    
-    message.set_content(content)
-    message['To'] = reciever
-    message['From'] = sender
-    message['Subject'] = subject#subject header matches if replying
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+        message = EmailMessage()
 
-    encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        message.set_content(content)
+        message['To'] = reciever
+        message['From'] = sender
+        message['Subject'] = subject # subject header matches if replying
+
+        encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
         create_message = {'raw': encoded_message}
 
-    send_message = (service.users().messages().send(userId="me", body=create_message).execute())
+        send_message = (service.users().messages().send(userId="me", body=create_message).execute())
         print(F'Message Id: {send_message["id"]}')
+
     except HttpError as error:
         print(F'An error occurred: {error}')
         send_message = None
+
     return send_message
